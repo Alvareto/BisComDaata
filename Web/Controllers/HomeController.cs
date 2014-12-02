@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Web.Models;
 using System.Web.Configuration;
+using System.IO;
 
 namespace Web.Controllers
 {
@@ -67,18 +68,9 @@ namespace Web.Controllers
             {
                 foreach (var podatak in PodaciSession)
                 {
-                    if ((int)
-                    db.Podatak_Insert(
-                        podatak.Ime,
-                        podatak.Prezime,
-                        podatak.PostanskiBroj,
-                        podatak.Grad,
-                        podatak.Telefon
-                    ) != 0)
-                    {
-                        // Dogodila se greška
-                    }
+                    podatak.Save(db, podatak);
                 }
+
                 // Očisti listu
                 PodaciSession.ToList().Clear();
             }

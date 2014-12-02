@@ -22,6 +22,25 @@ namespace Web.Models
         public String Grad { get; set; }
         public String Telefon { get; set; }
 
+        public Boolean Save(DatabaseEntities db, PodatakViewModel podatak)
+        {
+            if (podatak.PostanskiBroj != INVALID_POSTAL_CODE)
+            {
+                if ((int)db.Podatak_Insert(
+                    podatak.Ime,
+                    podatak.Prezime,
+                    Int32.Parse(podatak.PostanskiBroj),
+                    podatak.Grad,
+                    podatak.Telefon).First() == 0)
+                {
+                    // uspješno spremljeno
+                    return true;
+                }
+            }
+
+            return false; // dogodila se greška
+        }
+
         public PodatakViewModel(String pBr)
         {
             // pokušaj parsirati poštanski broj kao integer
