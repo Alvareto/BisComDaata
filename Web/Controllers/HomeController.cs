@@ -58,6 +58,34 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        // POST: Home/Save
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Save()
+        {
+            if (PodaciSession.Any())
+            {
+                foreach (var podatak in PodaciSession)
+                {
+                    if ((int)
+                    db.Podatak_Insert(
+                        podatak.Ime,
+                        podatak.Prezime,
+                        podatak.PostanskiBroj,
+                        podatak.Grad,
+                        podatak.Telefon
+                    ) != 0)
+                    {
+                        // Dogodila se greška
+                    }
+                }
+                // Očisti listu
+                PodaciSession.ToList().Clear();
+            }
+
+            return RedirectToAction("Index");
+        }
+
         /// <summary>
         /// Loads data from csv file into List of PodatakViewModels to show in grid.
         /// </summary>
