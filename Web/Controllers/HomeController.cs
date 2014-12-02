@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
+using System.Web.Configuration;
 
 namespace Web.Controllers
 {
@@ -14,107 +15,97 @@ namespace Web.Controllers
     {
         private DatabaseEntities db = new DatabaseEntities();
 
+        /// <summary>
+        /// Retrieve the directory of the file from the app settings in Web.config file.
+        /// </summary>
+        private String PodaciDirectory
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["CsvFileDirectory"];
+            }
+        }
+
+        /// <summary>
+        /// Gets, or sets, list of Podatak in session.
+        /// </summary>
+        private IEnumerable<PodatakViewModel> PodaciSession
+        {
+            get
+            {
+                return (List<PodatakViewModel>)Session["podaci"] ?? new List<PodatakViewModel>();
+            }
+            set
+            {
+                Session["podaci"] = value;
+            }
+        }
+
         // GET: Home
         public ActionResult Index()
         {
-            return View(db.Podatak.ToList());
+            return View(this.PodaciSession);
         }
 
-        // GET: Home/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Podatak podatak = db.Podatak.Find(id);
-            if (podatak == null)
-            {
-                return HttpNotFound();
-            }
-            return View(podatak);
-        }
-
-        // GET: Home/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Home/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Home/Load
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Ime,Prezime,PostanskiBroj,Grad,Telefon")] Podatak podatak)
+        public ActionResult Load()
         {
-            if (ModelState.IsValid)
-            {
-                db.Podatak.Add(podatak);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            this.PodaciSession = LoadCsvDataFrom(
+                filePath: Path.Combine(PodaciDirectory, "podaci.csv"));
 
-            return View(podatak);
-        }
-
-        // GET: Home/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Podatak podatak = db.Podatak.Find(id);
-            if (podatak == null)
-            {
-                return HttpNotFound();
-            }
-            return View(podatak);
-        }
-
-        // POST: Home/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Ime,Prezime,PostanskiBroj,Grad,Telefon")] Podatak podatak)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(podatak).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(podatak);
-        }
-
-        // GET: Home/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Podatak podatak = db.Podatak.Find(id);
-            if (podatak == null)
-            {
-                return HttpNotFound();
-            }
-            return View(podatak);
-        }
-
-        // POST: Home/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Podatak podatak = db.Podatak.Find(id);
-            db.Podatak.Remove(podatak);
-            db.SaveChanges();
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Loads data from csv file into List of PodatakViewModels to show in grid.
+        /// </summary>
+        /// <param name="filePath">Csv file path (directory + "podaci.csv")</param>
+        /// <returns>List</returns>
+        private List<PodatakViewModel> LoadCsvDataFrom(string filePath)
+        {
+            List<PodatakViewModel> pom = new List<PodatakViewModel>();
+            if (System.IO.File.Exists(filePath))
+            {
+                using (System.IO.StreamReader objReader = new System.IO.StreamReader(filePath))
+                {
+                    var contents = objReader.ReadToEnd();
+
+                    using (System.IO.StringReader strReader = new System.IO.StringReader(contents))
+                    {
+                        do
+                        {
+                            var textLine = strReader.ReadLine();
+
+                            if (textLine != string.Empty)
+                            {
+                                var splitLine = textLine.Split(';');
+
+                                pom.Add(new PodatakViewModel(pBr: splitLine[2])
+                                {
+                                    Ime = splitLine[0],
+                                    Prezime = splitLine[1],
+                                    //
+                                    Grad = splitLine[3],
+                                    Telefon = splitLine[4]
+                                });
+                            }
+                        } while (strReader.Peek() != -1);
+                    }
+                }
+            }
+
+            return pom;
+        }
+
+        /// <summary>
+        /// Releases unmanaged resources and optionally releases managed resources.
+        /// </summary>
+        /// <param name="disposing">
+        /// true to release both managed and unmanaged resources; false to release only
+        /// unmanaged resources.
+        /// </param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
