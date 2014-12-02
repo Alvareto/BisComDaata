@@ -24,5 +24,5 @@ BEGIN
 	)
 
 	RETURN  @@ERROR -- #9 implementirati vraćanje greške iz procedure
-	-- SELECT SCOPE_IDENTITY() AS Id
+	SELECT SCOPE_IDENTITY() AS Id
 END

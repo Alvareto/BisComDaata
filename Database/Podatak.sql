@@ -10,5 +10,5 @@ CREATE TABLE [dbo].[Podatak]
 );
 GO
 ALTER TABLE [dbo].[Podatak]
-  ADD CONSTRAINT ucOsoba UNIQUE (ime, prezime, telefon);
+  ADD CONSTRAINT ucOsoba UNIQUE (Ime, Prezime, Telefon);
 GO
