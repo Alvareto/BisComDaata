@@ -1,4 +1,5 @@
-﻿CREATE TABLE [dbo].[Podatak]
+-- Due to naming conventions, I renamed table from Podaci to Podatak.
+CREATE TABLE [dbo].[Podatak]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
 	[Ime] NVARCHAR(40) NOT NULL,
