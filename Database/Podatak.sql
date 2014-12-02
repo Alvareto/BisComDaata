@@ -7,7 +7,8 @@ CREATE TABLE [dbo].[Podatak]
 	[PostanskiBroj] INTEGER NOT NULL,
 	[Grad] NVARCHAR(60) NOT NULL,
 	[Telefon] NVARCHAR(15) NOT NULL
-)
-
+);
+GO
 ALTER TABLE [dbo].[Podatak]
-  ADD CONSTRAINT ucOsoba UNIQUE (ime, prezime, telefon)
+  ADD CONSTRAINT ucOsoba UNIQUE (ime, prezime, telefon);
+GO
