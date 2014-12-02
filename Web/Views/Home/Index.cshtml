@@ -55,3 +55,17 @@
 }
 
 </table>
+
+@using (Html.BeginForm("Load", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input type="submit" value="Load" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
