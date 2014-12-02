@@ -6,23 +6,29 @@
 	@telefon 	nvarchar(15)
 AS
 BEGIN
-	INSERT INTO [dbo].[Podatak]
-	(
-		[Ime],
-		[Prezime], 
-		[PostanskiBroj], 
-		[Grad], 
-		[Telefon]
-	)
-	VALUES 
-	(
-		@ime,
-		@prezime,
-		@pbr,
-		@grad,
-		@telefon
-	)
-
-	RETURN  @@ERROR -- #9 implementirati vraćanje greške iz procedure
-	SELECT SCOPE_IDENTITY() AS Id
+	BEGIN TRY
+		INSERT INTO [dbo].[Podatak]
+		(
+			[Ime],
+			[Prezime], 
+			[PostanskiBroj], 
+			[Grad], 
+			[Telefon]
+		)
+		VALUES 
+		(
+			@ime,
+			@prezime,
+			@pbr,
+			@grad,
+			@telefon
+		);
+		
+		SELECT SCOPE_IDENTITY() AS Id;
+		RETURN @@ERROR
+	END TRY
+	BEGIN CATCH
+		RETURN  @@ERROR -- #9 implementirati vraćanje greške iz procedure
+	END CATCH
+	
 END
