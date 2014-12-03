@@ -41,18 +41,19 @@ algoritam koji 300.000 redaka učitava i prikazuje u 0.8s:
 - loads all the data up front
 - places it into System.Data.DataTable in the loop
 - binds the table to the grid upon completion
+
 Prilagodio sam ga svojoj prilici (MVC, ne WebForms), zadržavajući više manje perfomanse.
 
 ##Podjela taskova
 - definiraj direktorij u configu
 - load data from directory + "podaci.csv" defined in config
 - display loaded data in gridview
-error row if invalid pBr (is not int)
+-- error row if invalid pBr (is not int)
 - create table
 - create Podatak_Insert stored procedure
 -- disable duplicates
 -- implement error return from procedure
--- implement loggingto sql server log
+-- implement logging to sql server log
 - save displayed data (from gridview) using procedure Podatak_Insert
 
 #Screenshots
