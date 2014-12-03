@@ -54,3 +54,11 @@ error row if invalid pBr (is not int)
 -- implement error return from procedure
 -- implement loggingto sql server log
 - save displayed data (from gridview) using procedure Podatak_Insert
+
+#Screenshots
+##Početno stanje aplikacije pri pokretanju
+![Pocetno stanje aplikacije](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/pocetnoStanje.png "Početno stanje")
+##Stanje aplikacije nakon učitavanja podataka iz .csv datoteke
+![Nakon učitavanja podataka](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/ucitaj.png "Učitavanje podataka")
+##Prikaz spremljenih podataka u bazi nakon klika na "Save" button
+![Nakon spremanja podataka](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/baza.png "Spremljeni podaci")
