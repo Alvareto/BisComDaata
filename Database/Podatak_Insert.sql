@@ -24,8 +24,8 @@ BEGIN
 			@telefon
 		);
 		
-		SELECT SCOPE_IDENTITY() AS Id;
 		RETURN @@ERROR
+		--SELECT SCOPE_IDENTITY() AS Id;
 	END TRY
 	BEGIN CATCH
 		RETURN  @@ERROR -- #9 implementirati vraćanje greške iz procedure
