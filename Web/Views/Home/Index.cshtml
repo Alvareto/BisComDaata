@@ -5,10 +5,10 @@
 }
 
 <h2>Index</h2>
-@if(!string.IsNullOrEmpty(ViewBag.Message)) {
+@if(!string.IsNullOrEmpty(ViewBag.ErrorMessage)) {
 <div class="alert alert-danger alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    <strong>Warning!</strong> @ViewBag.Message
+    <strong>Warning!</strong> @ViewBag.ErrorMessage
 </div>
 }
 <table class="table">
@@ -39,9 +39,17 @@
         <td>
             @Html.DisplayFor(modelItem => item.Prezime)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PostanskiBroj)
-        </td>
+        @if(item.PostanskiBroj == "INVALID") {
+            <td class="danger"><span class="sr-only">Invalid postal code</span>
+                @Html.DisplayFor(modelItem => item.PostanskiBroj)
+            </td>
+        }
+        else
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.PostanskiBroj)
+            </td>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.Grad)
         </td>
