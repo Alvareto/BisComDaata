@@ -45,6 +45,8 @@ namespace Web.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            if (TempData.ContainsKey("error"))
+                ViewBag.ErrorMessage = TempData["error"];
             return View(this.PodaciSession);
         }
 
@@ -65,16 +67,16 @@ namespace Web.Controllers
         public ActionResult Save()
         {
             if (PodaciSession.Any())
-            {
+            { // ako postoji bar jedan podatak
                 foreach (var podatak in PodaciSession)
                 {
-                    podatak.Save(db, podatak);
+                    if (!podatak.Save(db, podatak))
+                        TempData["error"] = "One or more records have not been saved.";
                 }
 
-                // Očisti listu
-                PodaciSession.ToList().Clear();
+                // Očisti listu podataka
+                PodaciSession = null;
             }
-
             return RedirectToAction("Index");
         }
 
@@ -88,7 +90,7 @@ namespace Web.Controllers
             List<PodatakViewModel> pom = new List<PodatakViewModel>();
             if (System.IO.File.Exists(filePath))
             {
-                using (System.IO.StreamReader objReader = new System.IO.StreamReader(filePath))
+                using (System.IO.StreamReader objReader = new System.IO.StreamReader(filePath, System.Text.Encoding.UTF8))
                 {
                     var contents = objReader.ReadToEnd();
 

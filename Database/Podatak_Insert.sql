@@ -1,3 +1,4 @@
+
 CREATE PROCEDURE [dbo].[Podatak_Insert]
 	@ime 		nvarchar(40),
 	@prezime 	nvarchar(60),

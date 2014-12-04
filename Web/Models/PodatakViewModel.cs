@@ -13,7 +13,7 @@ namespace Web.Models
     {
         // used when saving data to database to skid entries with invalid postal code
         // TODO: can this be done better?
-        public const string INVALID_POSTAL_CODE = "INVALID";
+        const string INVALID_POSTAL_CODE = "INVALID";
 
         //private Podatak _podatak; -- we don't need it
         public String Ime { get; set; }
@@ -24,21 +24,26 @@ namespace Web.Models
 
         public Boolean Save(DatabaseEntities db, PodatakViewModel podatak)
         {
-            if (podatak.PostanskiBroj != INVALID_POSTAL_CODE)
+            if (podatak.PostanskiBroj == INVALID_POSTAL_CODE)
+                return false;
+
+            try
             {
-                if ((int)db.Podatak_Insert(
+                // pokušaj snimiti podatke
+                db.Podatak_Insert(
                     podatak.Ime,
                     podatak.Prezime,
                     Int32.Parse(podatak.PostanskiBroj),
                     podatak.Grad,
-                    podatak.Telefon).First() == 0)
-                {
-                    // uspješno spremljeno
-                    return true;
-                }
+                    podatak.Telefon);
+            }
+            catch (Exception e)
+            {
+                return false; // dogodila se greška
+                // TODO: ukoliko bude potrebno, možeš dodati neki ispis ili nešto
             }
 
-            return false; // dogodila se greška
+            return true; // sve u redu
         }
 
         public PodatakViewModel(String pBr)
