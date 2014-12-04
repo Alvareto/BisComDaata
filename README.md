@@ -63,3 +63,5 @@ Prilagodio sam ga svojoj prilici (MVC, ne WebForms), zadržavajući više manje 
 ![Nakon učitavanja podataka](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/ucitaj.png "Učitavanje podataka")
 ##Prikaz spremljenih podataka u bazi nakon klika na "Save" button
 ![Nakon spremanja podataka](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/baza.png "Spremljeni podaci")
+##Obavijest ukoliko je došlo do pogreške pri spremanju podataka u bazu
+![Pogreška tijekom spremanja](https://github.com/Alvareto/BisComDaata/blob/master/Screenshots/snimi.png "Prikaz greške")
