@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Web.Models;
-using System.Web.Configuration;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
@@ -53,9 +50,9 @@ namespace Web.Controllers
         // POST: Home/Load
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Load()
+        public async Task<ActionResult> Load()
         {
-            this.PodaciSession = LoadCsvDataFrom(
+            this.PodaciSession = await LoadCsvDataFrom(
                 filePath: Path.Combine(PodaciDirectory, "podaci.csv"));
 
             return RedirectToAction("Index");
@@ -85,33 +82,26 @@ namespace Web.Controllers
         /// </summary>
         /// <param name="filePath">Csv file path (directory + "podaci.csv")</param>
         /// <returns>List</returns>
-        private List<PodatakViewModel> LoadCsvDataFrom(string filePath)
+        private async Task<List<PodatakViewModel>> LoadCsvDataFrom(string filePath)
         {
             List<PodatakViewModel> pom = new List<PodatakViewModel>();
             if (System.IO.File.Exists(filePath))
             {
                 using (System.IO.StreamReader objReader = new System.IO.StreamReader(filePath, System.Text.Encoding.UTF8))
                 {
-                    var contents = objReader.ReadToEnd();
+                    var contents = await objReader.ReadToEndAsync();
 
                     using (System.IO.StringReader strReader = new System.IO.StringReader(contents))
                     {
                         do
                         {
-                            var textLine = strReader.ReadLine();
+                            var textLine = await strReader.ReadLineAsync();
 
                             if (textLine != string.Empty)
                             {
-                                var splitLine = textLine.Split(';');
-
-                                pom.Add(new PodatakViewModel(pBr: splitLine[2])
-                                {
-                                    Ime = splitLine[0],
-                                    Prezime = splitLine[1],
-                                    //
-                                    Grad = splitLine[3],
-                                    Telefon = splitLine[4]
-                                });
+                                pom.Add(new PodatakViewModel(
+                                    textLine.Split(';')
+                                ));
                             }
                         } while (strReader.Peek() != -1);
                     }

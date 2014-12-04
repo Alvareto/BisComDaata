@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Web.Models
 {
@@ -22,9 +19,28 @@ namespace Web.Models
         public String Grad { get; set; }
         public String Telefon { get; set; }
 
+        /// <summary>
+        /// True if object is valid.
+        /// </summary>
+        public Boolean isValid
+        {
+            // u novoj verziji C#a ovo puno bolje izgleda :P
+            get
+            {
+                return PostanskiBroj != INVALID_POSTAL_CODE;
+            }
+        }
+
+        /// <summary>
+        /// Tries to save data object using stored procedure, 
+        /// and returns value based on operation success.
+        /// </summary>
+        /// <param name="db">database</param>
+        /// <param name="podatak">data object</param>
+        /// <returns>Boolean</returns>
         public Boolean Save(DatabaseEntities db, PodatakViewModel podatak)
         {
-            if (podatak.PostanskiBroj == INVALID_POSTAL_CODE)
+            if (!podatak.isValid)
                 return false;
 
             try
@@ -46,12 +62,16 @@ namespace Web.Models
             return true; // sve u redu
         }
 
-        public PodatakViewModel(String pBr)
+        public PodatakViewModel(String[] splitLine)
         {
+            this.Ime = splitLine[0];
+            this.Prezime = splitLine[1];
             // pokušaj parsirati poštanski broj kao integer
             // ukoliko ne uspije, proglasi ga nevaljanim
             int _pom;
-            PostanskiBroj = Int32.TryParse(pBr, out _pom) ? pBr : INVALID_POSTAL_CODE;
+            this.PostanskiBroj = Int32.TryParse(splitLine[2], out _pom) ? splitLine[2] : INVALID_POSTAL_CODE;
+            this.Grad = splitLine[3];
+            this.Telefon = splitLine[4];
         }
     }
 }
