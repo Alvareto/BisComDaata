@@ -71,7 +71,7 @@ namespace Web.Controllers
                 foreach (var podatak in PodaciSession)
                 {
                     if (!podatak.Save(db, podatak))
-                        TempData["error"] = "One or more records have not been saved.";
+                        TempData["error"] = "One or more records can not be saved because they are duplicates or contain invalid data.";
                 }
 
                 // Očisti listu podataka
